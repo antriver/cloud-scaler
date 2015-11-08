@@ -83,8 +83,8 @@ class CloudFlare extends DnsProvider
                     'content' => $record->value,
                     'ttl' => $record->ttl,
                     // Not in the docs but works to enable CloudFlare acceleration
-                    // Alternative way: get the records after adding (to get the id)
-                    // then update the record with proxied: true
+                    // Alternative way: call update after adding with the id that was returned
+                    // and set proxied: true
                     'proxied' => $record->proxied
                 ]
             );
@@ -93,7 +93,7 @@ class CloudFlare extends DnsProvider
     }
 
     /**
-     * Delete records pointing to any the given IP addresses from all the given domains.
+     * Delete records pointing to any of the given IP addresses in all the given domains.
      *
      * @param string[] $domains
      * @param IpAddress[] $ips
