@@ -1,1 +1,2 @@
-# digitalocean-scaler
+# CloudScaler
+It does things.

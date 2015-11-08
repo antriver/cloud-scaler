@@ -1,0 +1,25 @@
+{
+    "name": "tmd/cloud-scaler",
+    "authors": [
+        {
+            "name": "Anthony Kuske",
+            "email": "anthonykuske@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/antriver/DigitalOceanV2"
+        }
+    ],
+    "require": {
+        "symfony/console": "^2.7",
+        "toin0u/digitalocean-v2": "dev-NetworkVersion",
+        "guzzle/guzzle": "^3.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tmd\\CloudScaler\\": "src/"
+        }
+    }
+}

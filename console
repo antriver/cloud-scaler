@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Tmd\CloudScaler\Commands\ListHosts;
+use Tmd\CloudScaler\Commands\ListImages;
+use Tmd\CloudScaler\Commands\ListServices;
+use Tmd\CloudScaler\Commands\ScaleDown;
+use Tmd\CloudScaler\Commands\ScaleUp;
+use Tmd\CloudScaler\ServiceManager;
+
+$services = [];
+
+$config = require __DIR__ . '/config.php';
+
+$serviceManager = new ServiceManager();
+$serviceManager->registerProviders($config['providers']);
+$serviceManager->registerServices($config['services']);
+
+$console = new Application();
+$console->add(new ListHosts($serviceManager));
+$console->add(new ListImages($serviceManager));
+$console->add(new ListServices($serviceManager));
+$console->add(new ScaleDown($serviceManager));
+$console->add(new ScaleUp($serviceManager));
+$console->run();
