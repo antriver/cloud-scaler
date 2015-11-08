@@ -47,4 +47,4 @@ List all the services defined in the config file.
 Launch an additional virtual server at the hosting provider and add DNS entries for it at the DNS provider.
 
 ### `console scaledown <service>`
-Delete the newesst virtual at the hosting provider and remove DNS entries for it from the DNS provider.
+Delete the newesst virtual server at the hosting provider and remove DNS entries for it from the DNS provider.
