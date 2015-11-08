@@ -14,14 +14,89 @@ use Tmd\CloudScaler\Providers\Host\HostProvider;
 class Service
 {
     /**
+     * Default values for DNS records.
+     * Should contain 'ttl' and any other provider specific values.
+     *
+     * @var array[]
+     */
+    public $dnsDefaults;
+
+    /**
+     * After creating a host, create these DNS records pointing to it.
+     * %d in the string will be replaced with the instance number.
+     * Array should be in the format:
+     * 'domain1.com' => [
+     *      'subdomain',
+     *      'subdomain%d'
+     * ],
+     * 'domain2.com' => [
+     *      'server%d'
+     * ]
+     *
+     * @var array[][]
+     */
+    public $dnsRecords = [];
+
+    /**
+     * Array of provider specific information to use when creating a host.
+     * For DigitalOcean:
+     *      'region', 'size', and 'image'
+     *
+     * @var array
+     */
+    public $hostDefaults = [];
+
+    /**
+     * A regular expression to pick this service's host's hostnames out of all the hosts at the provider.
+     *
+     * @var string
+     */
+    public $hostnamePattern;
+
+    /**
+     * The hostname to use for new hosts.
+     * %d in the string will be replaced with the instance number.
+     *
+     * @var string
+     */
+    public $hostnameTemplate;
+
+
+    /**
+     * Minimum number of hosts to keep running.
+     *
+     * @var int
+     */
+    public $minHosts = 1;
+
+    /**
+     * Maximum number of hosts to spawn.
+     *
+     * @var int
+     */
+    public $maxHosts;
+
+    /**
+     * Name of the service.
+     *
      * @var string
      */
     public $name;
 
     /**
-     * @var array Data from the config.php file.
+     * If specified, after creating a host it won't be considered ready until the following
+     * URL returns a 200 response code. %s in the string will be replaced with the host's first public  IP address.
+     *
+     * @var string
      */
-    private $data;
+    public $testUrl;
+
+    /**
+     * Any additional headers to set when making the request to $testUrl (key => value pairs)
+     *
+     * @var array
+     */
+    public $testUrlHeaders = [];
 
     /**
      * @var DnsProvider
@@ -42,24 +117,15 @@ class Service
     public function __construct($name, $data, DnsProvider $dnsProvider, HostProvider $hostProvider)
     {
         $this->name = $name;
-        $this->data = $data;
+
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
+
         $this->dnsProvider = $dnsProvider;
         $this->hostProvider = $hostProvider;
-    }
-
-    /**
-     * Returns data from the service's configuration.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-        return null;
     }
 
     /**

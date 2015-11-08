@@ -76,16 +76,18 @@ class ScaleUp extends ServiceCommand
             sleep(10);
         }
 
-        $progress->setMessage("Testing host's HTTP response");
-        $progress->advance();
+        if (!empty($service->testUrl)) {
+            $progress->setMessage("Testing host's HTTP response");
+            $progress->advance();
 
-        do {
-            $lastResponse = $host->testHttp($service->testUrlPattern, $service->testUrlHeaders);
-            $progress->setMessage("Testing host's HTTP response (Current response: $lastResponse)");
-            $progress->display();
-            $lastResponse === 200 || sleep(5);
+            do {
+                $lastResponse = $host->testHttp($service->testUrl, $service->testUrlHeaders);
+                $progress->setMessage("Testing host's HTTP response (Current response: $lastResponse)");
+                $progress->display();
+                $lastResponse === 200 || sleep(5);
 
-        } while ($lastResponse !== 200);
+            } while ($lastResponse !== 200);
+        }
 
         $dnsProvider = $service->getDnsProvider();
         $recordData = [];
