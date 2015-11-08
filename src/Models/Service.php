@@ -23,24 +23,24 @@ use Tmd\CloudScaler\Providers\Host\HostProvider;
 class Service
 {
     /**
-     * Default values for DNS records.
-     * Should contain 'ttl' and any other provider specific values.
-     *
-     * @var array[]
-     */
-    public $dnsDefaults;
-
-    /**
      * After creating a host, create these DNS records pointing to it.
      * %d in the string will be replaced with the instance number.
      * Array should be in the format:
      * 'domain1.com' => [
-     *      'subdomain',
-     *      'subdomain%d'
+     *      'subdomain' => [
+     *          // Settings for this record
+     *      ],
+     *      'subdomain%d' => [
+     *          // Settings for this record
+     *      ]
      * ],
      * 'domain2.com' => [
-     *      'server%d'
+     *      'server%d'  => [
+     *          // Settings for this record
+     *      ]
      * ]
+     *
+     * The settings can contain any provider-specific options.
      *
      * @var array[][]
      */

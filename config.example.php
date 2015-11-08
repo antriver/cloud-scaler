@@ -43,15 +43,32 @@ return [
              * %d in the string will be replaced with the instance number.
              * Array should be in the format:
              * 'domain1.com' => [
-             *      'subdomain',
-             *      'subdomain%d'
+             *      'subdomain' => [
+             *          // Settings for this record
+             *      ],
+             *      'subdomain%d' => [
+             *          // Settings for this record
+             *      ]
              * ],
              * 'domain2.com' => [
-             *      'server%d'
+             *      'server%d'  => [
+             *          // Settings for this record
+             *      ]
              * ]
+             *
+             * The settings can contain any provider-specific options
              */
             'dnsRecords' => [
-                'themediadudes.com' => ['www', 'web%d'],
+                'themediadudes.com' => [
+                    'www' => [
+                        'proxied' => true, // Accelerate with CloudFlare
+                        'ttl' => 1 // 1 = 'auto' on CloudFlare
+                    ],
+                    'web%d' => [
+                        'proxied' => false,
+                        'ttl' => 1
+                    ]
+                ]
             ],
 
             // Minimum number of hosts to keep running.

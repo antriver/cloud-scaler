@@ -102,14 +102,14 @@ class ScaleUp extends ServiceCommand
         $recordData = [];
         foreach ($host->publicIps as $ip) {
             foreach ($service->dnsRecords as $domain => $domainRecords) {
-                foreach ($domainRecords as $record) {
+                foreach ($domainRecords as $record => $recordSettings) {
                     $data = [
                         'domain' => $domain,
                         'type' => $ip->version === 6 ? 'AAAA' : 'A',
                         'name' => sprintf($record, $newInstance),
                         'value' => $ip->ip,
                     ];
-                    $recordData[] = $data + $service->dnsDefaults;
+                    $recordData[] = $data + $recordSettings;
                 }
             }
         }
