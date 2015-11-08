@@ -1,7 +1,7 @@
 # CloudScaler
 Scale up or down the number of virtual servers for your application with just one command!
 
-Typing `scaleup web` can launch a new server at your cloud hosting provider, with a premade image you created. Then it will add the new server's IP address to you DNS provider for round-robin DNS. Traffic will start flowing to the new server immediately with no configuration required.
+Typing `console scaleup web` can launch a new server at your cloud hosting provider, with a premade image you created. Then it will add the new server's IP address to you DNS provider for round-robin DNS. Traffic will start flowing to the new server immediately with no configuration required.
 
 Currently works with DigitalOcean servers and CloudFlare for DNS. But it's design to be very easy to add more providers. HAProxy provider anyone?
 
