@@ -70,7 +70,6 @@ class Service
      */
     public $hostnameTemplate;
 
-
     /**
      * Minimum number of hosts to keep running.
      *
