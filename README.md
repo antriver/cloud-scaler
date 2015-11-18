@@ -40,7 +40,7 @@ console listservices # Run a command
 ### `console listhosts [<service>] [--load]`
 List all the virtual servers that exist. Optionally only those for the specified service.
 
-Optionally display the load average for each hosts (can be slow with lots of hosts).
+Optionally displays the load average for each host (can be slow with lots of hosts).
 [![](http://img.ctrlv.in/img/15/11/18/564c171744bdf.png)](http://ctrlv.in/670451)
 
 ### `console listservices`
