@@ -123,6 +123,23 @@ abstract class Host
     }
 
     /**
+     * Get the load average for the server.
+     *
+     * @return float[]
+     */
+    public function getLoad()
+    {
+        $ssh = sprintf($this->service->ssh, $this->getHostname());
+        $cmd = $ssh . " uptime | awk '{print $(NF-2)\" \"$(NF-1)\" \"$(NF-0)}'";
+        $load = exec($cmd);
+        $load = explode(',', $load);
+        $load = array_map(function ($str) {
+            return (float)trim($str);
+        }, $load);
+        return $load;
+    }
+
+    /**
      * Make an HTTP request to this host's first public IP address. Returns the HTTP status code.
      *
      * @param string $urlPattern

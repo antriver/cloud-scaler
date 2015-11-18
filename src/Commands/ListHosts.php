@@ -14,6 +14,7 @@ namespace Tmd\CloudScaler\Commands;
 use Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tmd\CloudScaler\Models\Host;
 
@@ -31,7 +32,8 @@ class ListHosts extends ServiceCommand
     {
         $this->setName('listhosts')
             ->setDescription("List all hosts that exist at the provider for a service.")
-            ->addArgument('service', InputArgument::OPTIONAL, 'Only show hosts for this service.');
+            ->addArgument('service', InputArgument::OPTIONAL, 'Only show hosts for this service.')
+            ->addOption('load', null, InputOption::VALUE_NONE, 'Display the load average of hosts.');
     }
 
     /**
@@ -59,19 +61,31 @@ class ListHosts extends ServiceCommand
         }
 
         $table = $this->getHelper('table');
-        $table->setHeaders(array('Service', 'Instance', 'Hostname', 'IP', 'State'));
+        $cols = array('Service', 'Instance', 'Hostname', 'IP', 'State');
+
+        if ($showLoad = $input->getOption('load')) {
+            $cols[] = 'Load';
+        }
+
+        $table->setHeaders($cols);
         $rows = [];
 
         foreach ($hosts as $host) {
             $ipStrings = $host->getPublicIpStrings();
 
-            $rows[] = [
+            $row = [
                 $host->getService()->name,
                 $host->instance,
                 $host->getHostname(),
                 implode(', ', $ipStrings),
                 $host->getState()
             ];
+
+            if ($showLoad) {
+                $row[] = implode(', ', $host->getLoad());
+            }
+
+            $rows[] = $row;
         }
 
         $table->setRows($rows);

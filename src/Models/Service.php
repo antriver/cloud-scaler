@@ -92,6 +92,13 @@ class Service
     public $name;
 
     /**
+     * Full command to ssh in to a host for this service.
+     *
+     * @var string
+     */
+    public $ssh;
+
+    /**
      * If specified, after creating a host it won't be considered ready until the following
      * URL returns a 200 response code. %s in the string will be replaced with the host's first public  IP address.
      *

@@ -99,6 +99,12 @@ return [
             ],
 
             /**
+             * Command to ssh in to a host.
+             * %s will be replaced with the hostname/IP.
+             */
+            'ssh' => 'ssh -p 22 anthony@%s',
+
+            /**
              * If specified, after creating a host it won't be considered ready until the following
              * URL returns a 200 response code. %s in the string will be replaced
              * with the host's first public IP address.
