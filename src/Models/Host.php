@@ -63,6 +63,16 @@ abstract class Host
     abstract public function getState();
 
     /**
+     * Returns the first public IP address for this host.
+     *
+     * @return IpAddress
+     */
+    public function getPublicIp()
+    {
+        return $this->publicIps[0];
+    }
+
+    /**
      * Returns if this host is booted and ready to use.
      *
      * @return bool
@@ -129,7 +139,8 @@ abstract class Host
      */
     public function getLoad()
     {
-        $ssh = sprintf($this->service->ssh, $this->getHostname());
+        $ip = $this->getPublicIp()->ip;
+        $ssh = sprintf($this->service->ssh, $ip);
         $cmd = $ssh . " uptime | awk '{print $(NF-2)\" \"$(NF-1)\" \"$(NF-0)}'";
         $load = exec($cmd);
         $load = explode(',', $load);
