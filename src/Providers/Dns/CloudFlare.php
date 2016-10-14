@@ -45,6 +45,13 @@ class CloudFlare extends DnsProvider
     private $zoneIds = [];
 
     /**
+     * Path to store CloudFlare cookies.
+     *
+     * @var string
+     */
+    private $cookieFile;
+
+    /**
      * @param string $email Your CloudFlare account email address.
      * @param string $key Your CloudFlare API key.
      *
@@ -58,6 +65,8 @@ class CloudFlare extends DnsProvider
 
         $this->cloudFlareEmail = $email;
         $this->cloudFlareKey = $key;
+
+        $this->cookieFile = tempnam("/tmp", "CF_COOKIES");
     }
 
     /**
@@ -73,6 +82,9 @@ class CloudFlare extends DnsProvider
         $records = [];
         foreach ($recordData as $data) {
             $record = new CloudFlareDnsRecord($data);
+
+            print_r($record);
+
             $zoneId = $this->getZoneId($record->domain);
             $this->request(
                 'POST',
@@ -192,19 +204,39 @@ class CloudFlare extends DnsProvider
             $url .= '?' . http_build_query($data);
         }
 
+        var_dump($type);
+        var_dump($url);
+        print_r($data);
+        print_r($headers);
+
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+
+        curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $this->cookieFile);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $this->cookieFile);
+
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         $response = curl_exec($curl);
-        $response = json_decode($response);
 
-        if (!empty($response->errors)) {
-            throw new CloudFlareException($response->errors[0]->message);
-        } elseif (!$response || $response->success !== true) {
+        $info = curl_getinfo($curl);
+        $header = substr($response, 0, $info['header_size']);
+        $body = substr($response, $info['header_size']);
+
+        var_dump($info, $header, $body);
+
+        $responseObject = json_decode($body);
+
+        if (!empty($responseObject->errors)) {
+            throw new CloudFlareException($responseObject->errors[0]->message);
+        } elseif (!$responseObject || $responseObject->success !== true) {
             throw new CloudFlareException("Error communicating with CloudFlare");
         }
 
-        return $response;
+        return $responseObject;
     }
 }

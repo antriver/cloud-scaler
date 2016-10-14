@@ -17,8 +17,6 @@ use Tmd\CloudScaler\Providers\Dns\DnsProvider;
 use Tmd\CloudScaler\Providers\Host\HostProvider;
 
 /**
- * IoC container.
- *
  * @package Tmd\CloudScaler
  */
 class ServiceManager

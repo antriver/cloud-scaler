@@ -34,4 +34,5 @@ $console->add(new ListImages($serviceManager));
 $console->add(new ListServices($serviceManager));
 $console->add(new ScaleDown($serviceManager));
 $console->add(new ScaleUp($serviceManager));
+$console->add(new \Tmd\CloudScaler\Commands\TestAddDnsCommand($serviceManager));
 $console->run();
